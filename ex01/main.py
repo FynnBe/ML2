@@ -18,7 +18,7 @@ X = images[np.where([t in subset for t in target])]
 y = target[np.where([t in subset for t in target])]
 y[y == subset[0]] = 1
 y[y == subset[1]] = -1
- 
+
 #plt.imshow(X[0])
 #plt.show()
 
@@ -28,7 +28,6 @@ print('shape X:', np.shape(X))
 print('shape y:', np.shape(y))
 
 def sigmoid(Z):
-    print('sigmoid', min(1 / (1 + np.exp(-Z))), max(1 / (1 + np.exp(-Z))))
     return 1 / (1 + np.exp(-Z))
 
 def gradient(b, X, y):
@@ -39,11 +38,9 @@ def predict(b, X):
     ret[ret >= 0] = 1
     ret[ret < 0] = -1
     return ret
-    
+
 def zero_one_loss(y_pred, y_true):
     return np.count_nonzero( (y_pred * y_true) - 1)
-
-b = np.ones(64)
 
 def tau(tau0, gamma, t):
     print('tau', tau0 / (1 + gamma* t))
@@ -53,14 +50,23 @@ def tau(tau0, gamma, t):
 def gradient_descent(X, y, b0, tau, tau0, gamma, m):
     b = b0
     for t in range(m):
-        grad = gradient(b, X, y)
-        b -= tau(tau0, gamma, t)*grad
+        b -= tau(tau0, gamma, t)*gradient(b, X, y)
         b = b.clip(-1., 1.)
     return b
 
-b = np.random.rand(64) * 2 - 1
+def stochastic_gradient_descent(X, y, b0, tau, tau0, gamma, m):
+    b = b0
+    for t in range(m):
+        b -= tau(tau0, gamma, t)*gradient(b, X, y)
+        b = b.clip(-1., 1.)
+    return b
+
+b0 = np.random.rand(64) * 2 - 1
 tau0 = 1.
 gamma = .5
 m = 100
 
-print(gradient_descent(X, y, b, tau, tau0, gamma, m))
+print(zero_one_loss(predict(gradient_descent(X, y, b0, tau, tau0, gamma, m), X), y))
+
+#print(gradient_descent(X, y, b0, tau, tau0, gamma, m))
+
