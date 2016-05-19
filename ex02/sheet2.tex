@@ -1,0 +1,66 @@
+\documentclass{article}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{graphicx}
+
+\title{Machine Learning II, Sheet2}
+\author{Fynn Beuttenmüller, Jan Lammel}
+
+\begin{document}
+
+\maketitle
+
+\section{Theory}
+\subsection{Linear Activation Function}
+
+\begin{align}
+	Z_l = & \Phi_l(\tilde{Z}_l) = \Phi_l(B_l Z_{l-1}) \overbrace{=}^{\Phi_l linear} B_l \Phi_l(\Phi_{l-1}(\tilde{Z}_{l-1})) \\ 
+	= & B_l \Phi_l(\Phi_{l-1}(B_{l-1} Z_{l-2})) \underbrace{=}_{\Phi_{l-1} linear} B_l B_{l-1} \Phi_l(\Phi_{l-1}(Z_{l-2})) \\
+	= & ... = \underbrace{\prod\limits_{l=L}^1 B_l}_{=: \bar{B}} \cdot \underbrace{\Phi_L \circ .. \circ \Phi_1}_{=: \bar{\Phi}} (Z_0) \\
+	= & \bar{B} \bar{\Phi} (Z_0)
+\end{align}
+
+$ \Rightarrow$ 1 Layer form
+
+\subsection{Weight Decayle}
+\subsubsection{Part 1}
+
+\begin{align}
+Loss(\omega) = L_0(\omega) + L_{reg}(\omega) = L_0(\omega) + \frac{\lambda}{2 N} \omega^T \omega
+\end{align}
+
+\begin{align}
+	\frac{\partial Loss}{\partial \omega} = \frac{\partial L_0}{\partial \omega} + \frac{\partial L_{reg}}{\partial \omega} = \frac{\partial L_0}{\partial \omega} + \frac{\lambda}{N} \omega
+\end{align}
+
+\begin{align}
+	\omega^{(t+1)} = & \omega^{(t)} - \tau \frac{\partial Loss}{\partial \omega} =  \omega^{t} - \tau \left(\frac{\partial L_0}{\partial \omega} + \frac{\lambda}{N} \omega^{(t)} \right) \\
+	= & \left( 1 - \underbrace{\frac{\lambda}{N} \tau}_{=: \epsilon} \right) \omega^{(t)} - \tau \frac{\partial L_0}{\partial \omega} \\
+	= & \left( 1 - \epsilon \right) \omega^{(t)} - \tau \frac{\partial L_0}{\partial \omega}
+\end{align}
+
+
+\subsubsection{Part 2}
+
+$(1 - \epsilon) \omega^{(t)}$ reduces magnitude of $|| \omega ||$, which prevents one weight to become dominant over the others.
+
+\subsubsection{Part 3}
+
+\begin{align}
+	L_{reg} = \frac{\lambda}{2 N} || \omega ||_1 \\
+	\frac{\partial L_reg}{\partial \omega} =  \frac{\lambda}{2 N} sign(\omega) \\
+	\Rightarrow \omega^{(t+1)} = \omega^{(t)} - \tau \left( \frac{\partial L_0}{\partial w} +  \frac{\lambda}{2 N} sign(\omega^{(t)}) \right)
+\end{align}
+
+\subsubsection{Part 4}
+
+Due to the weight decay the bias weight would become more and more dominant against the others, so there is no benefit on doing that.
+
+\end{document}
+
+
+
+
+
