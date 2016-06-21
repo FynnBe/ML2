@@ -1,0 +1,14 @@
+class array:
+    @property
+    def T(self):
+        return "lala"
+
+    def lop(self):
+        return "lpoasidf"
+
+
+a = array()
+a.T
+
+print(a.lop)
+print(array.lop)
