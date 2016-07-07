@@ -31,12 +31,21 @@ def RMSprop(cost, params, lr=0.001, rho=0.9, epsilon=1e-6):
         updates.append((p, p - lr * g))
     return updates
 
+def dropout(X, p_use=1.):
+    if p_use < 1.:
+        rs = RandomStreams()
+        out = rs.multinomial(pvals=[[p_use, 1.-p_use]]*len(X))
+        print out
+
+    else:
+        return X
+
 def model(X, w_h, w_h2, w_o, p_use_input, p_use_hidden):
-    #X = dropout(X, p_drop_input)
+    #X = dropout(X, p_use_input)
     h = rectify(T.dot(X, w_h))
-    #h = dropout(h, p_drop_hidden)
+    #h = dropout(h, p_use_hidden)
     h2 = rectify(T.dot(h, w_h2))
-    #h2 = dropout(h2, p_drop_hidden)
+    #h2 = dropout(h2, p_use_hidden)
     py_x = softmax(T.dot(h2, w_o))
     return h, h2, py_x
 
